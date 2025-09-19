@@ -11,6 +11,11 @@ const routes = [
     component: () => import('../views/Login.vue')
   },
   {
+    path: '/demo',
+    name: 'demo',
+    component: () => import('../views/demo.vue')
+  },
+  {
     path: '/master',
     component: () => import('../views/Master/ManageMaster.vue'),
     redirect: '/master/delete',
@@ -29,6 +34,8 @@ const routes = [
       { path: 'kaoqin', name: '校长考勤管理', component: () => import(/* webpackChunkName: "about" */ '../views/Master/KaoqinMaster.vue')},
       { path: 'shouzhi', name: '校长收支管理', component: () => import(/* webpackChunkName: "about" */ '../views/Master/ShouzhiMaster.vue')},
       { path: 'salary', name: '校长老师工资管理', component: () => import(/* webpackChunkName: "about" */ '../views/Master/SalaryMaster.vue')},
+      { path: 'jixiaoremake', name: '校长老师绩效详情', component: () => import(/* webpackChunkName: "about" */ '../views/Master/JixiaoremakeMaster.vue')},
+      { path: 'othercoll', name: '校长老师绩效详情', component: () => import(/* webpackChunkName: "about" */ '../views/Master/OthercollMaster.vue')},
     ]
   }, {
     path: '/teacher',

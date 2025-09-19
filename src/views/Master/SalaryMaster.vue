@@ -129,12 +129,15 @@ export default {
     savexiugai(){
       this.request.post("salary/updata", this.form).then(res => {
         this.xiuwindows = false
+        if (res.really){
+          this.$message.success(res.data);
+        } else {
+          this.$message.error(res.data);
+        }
         this.flushed()
       })
     },
     flushed(){
-      console.log(this.month)
-      console.log(this.masterId)
       this.request.get("salary/flushedmaster", {
         params:{
           masterId: this.masterId,
@@ -142,8 +145,10 @@ export default {
         }
       }).then(res => {
         if (res.really){
-          this.$message.success('数据已刷新');
+          this.$message.success(res.data);
           this.get()
+        }else {
+          this.$message.success(res.data);
         }
       })
     },
@@ -157,6 +162,8 @@ export default {
         if (res.really){
           this.$message.success('数据已保存');
           this.get()
+        }else {
+          this.$message.error(res.data);
         }
       })
     }

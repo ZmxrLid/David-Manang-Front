@@ -2,7 +2,7 @@
   <div>
     <el-breadcrumb separator="/">
       <el-breadcrumb-item>首页</el-breadcrumb-item>
-      <el-breadcrumb-item>考勤管理</el-breadcrumb-item>
+      <el-breadcrumb-item>绩效管理</el-breadcrumb-item>
     </el-breadcrumb>
 
     <div style="padding: 10px 0;margin-bottom: 40px" >
@@ -12,34 +12,29 @@
         type="month"
         placeholder="选择月">
       </el-date-picker>
-      <el-button type="primary" @click="load">查询</el-button>
+      <el-button type="primary" @click="begin">查询</el-button>
+      <el-button @click="flushed" icon="el-icon-refresh">刷新</el-button>
     </div>
 
     <el-table :data="tableData" border stripe :header-cell-class-name="'headerBG'">
-      <el-table-column prop="kaoqinTeachername" label="老师姓名"></el-table-column>
-      <el-table-column prop="kaoqinYing" label="应上天数"></el-table-column>
-      <el-table-column prop="kaoqinDays" label="考勤天数"></el-table-column>
-      <el-table-column prop="kaoqinQingjia" label="请假次数"></el-table-column>
-      <el-table-column prop="kaoqinTentime" label="迟到早退10分钟内次数"></el-table-column>
-      <el-table-column prop="kaoqinOnehours" label="迟到早退1小时内次数"></el-table-column>
-      <el-table-column prop="kaoqinTwohours" label="迟到早退2小时内次数"></el-table-column>
-      <el-table-column prop="kaoqinThreehours" label="迟到早退3小时内次数"></el-table-column>
-      <el-table-column prop="kaoqinBantian" label="请假半天次数"></el-table-column>
-      <el-table-column prop="kaoqinTeachernum" label="底薪"></el-table-column>
-      <el-table-column prop="kaoqinKaoqinnum" label="全勤奖"></el-table-column>
-      <el-table-column prop="kaoqinNum" label="共计"></el-table-column>
+      <el-table-column prop="jixiaoremakeTeachername" label="老师姓名"></el-table-column>
+      <el-table-column prop="jixiaoremakeClassnum" label="本月上课数"></el-table-column>
+      <el-table-column prop="jixiaoremakeStudentnum" label="本月所教学生数"></el-table-column>
+      <el-table-column prop="jixiaoremakeKouchu" label="扣除绩效"></el-table-column>
+      <el-table-column prop="jixiaoremakeJixiao" label="产生绩效"></el-table-column>
+      <el-table-column prop="jixiaoremakeRemake" label="备注"></el-table-column>
       <el-table-column label="操作" width="168">
         <template slot-scope="scope">
           <el-button
             type="warning"
             @click="userhandleEdit(scope.row)"
-            :disabled="scope.row.kaoqinState === 1">
+            :disabled="scope.row.jixiaoremakeState === 1">
             编辑<i class="el-icon-edit"></i>
           </el-button>
           <el-button
             type="danger"
             @click="userdelzq(scope.row)"
-            :disabled="scope.row.kaoqinState === 1">
+            :disabled="scope.row.jixiaoremakeState === 1">
             保存
           </el-button>
         </template>
@@ -59,17 +54,11 @@
 
     <!--        修改弹窗-->
     <el-dialog title="考勤信息" :visible.sync="dialogFormVisiblexiugai" width="30%">
-      {{this.form.kaoqinTeachername}}
+      {{this.form.jixiaoremakeTeachername}}
       <el-form label-width="80px" size="big">
-        <el-form-item label="ID" style="display: none"><el-input v-model="form.kaoqinId" autocomplete="off"></el-input></el-form-item>
-        <el-form-item label="应上天数"><el-input v-model="form.kaoqinYing" autocomplete="off"></el-input></el-form-item>
-        <el-form-item label="考勤天数"><el-input v-model="form.kaoqinDays" autocomplete="off"></el-input></el-form-item>
-        <el-form-item label="请假次数"><el-input v-model="form.kaoqinQingjia" autocomplete="off"></el-input></el-form-item>
-        <el-form-item label="迟到早退10分钟内次数"><el-input v-model="form.kaoqinTentime" autocomplete="off"></el-input></el-form-item>
-        <el-form-item label="迟到早退1小时内次数"><el-input v-model="form.kaoqinOnehours" autocomplete="off"></el-input></el-form-item>
-        <el-form-item label="迟到早退2小时内次数"><el-input v-model="form.kaoqinTwohours" autocomplete="off"></el-input></el-form-item>
-        <el-form-item label="迟到早退3小时内次数"><el-input v-model="form.kaoqinThreehours" autocomplete="off"></el-input></el-form-item>
-        <el-form-item label="请假半天次数"><el-input v-model="form.kaoqinBantian" autocomplete="off"></el-input></el-form-item>
+        <el-form-item label="ID" style="display: none"><el-input v-model="form.jixiaoremakeId" autocomplete="off"></el-input></el-form-item>
+        <el-form-item label="扣除绩效"><el-input v-model="form.jixiaoremakeKouchu" autocomplete="off"></el-input></el-form-item>
+        <el-form-item label="备注"><el-input v-model="form.jixiaoremakeRemake" autocomplete="off"></el-input></el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisiblexiugai = false">取 消</el-button>
@@ -95,7 +84,7 @@ export default {
   },
   created() {
     //请求分页查询数据
-    this.load()
+    this.begin()
   },
   methods:{
     getCurrentMonth() {
@@ -104,8 +93,22 @@ export default {
       const month = String(now.getMonth() + 1).padStart(2, '0');
       return `${year}-${month}`;
     },
+    begin(){
+      this.request.get('/jixiaoremake/begin',{
+        params:{
+          masterId:localStorage.getItem("masterId"),
+          date:this.month
+        }
+      }).then(res =>{
+        if (res.really){
+          this.load()
+        }else {
+          this.$message.error(res.data)
+        }
+      })
+    },
     load(){
-      this.request.get('/kaoqin/pagemaster',{
+      this.request.get('/jixiaoremake/pagemaster',{
         params:{
           pageNum:this.pageNum,
           pageSize:this.pageSize,
@@ -121,7 +124,7 @@ export default {
     //修改
 
     savexiugai(){
-      this.request.post('/kaoqin/uploadmaster',this.form).then(res => {
+      this.request.post('/jixiaoremake/uploadmaster',this.form).then(res => {
         if(res.really){
           this.$message.success("保存成功")
           this.dialogFormVisiblexiugai = false
@@ -147,13 +150,23 @@ export default {
       this.load()
     },
     userdelzq(row){
-      this.request.post('/kaoqin/ctrls',row).then(res => {
+      this.request.post('/jixiaoremake/ctrls',row).then(res => {
         if(res.really){
           this.$message.success("保存成功")
           this.load()
         }else{
           this.$message.error(res.data)
         }
+      })
+    },
+    flushed(){
+      this.request.get('/jixiaoremake/flushedmaster',{
+        params:{
+          masterId:localStorage.getItem("masterId"),
+          date:this.month
+        }
+      }).then(res =>{
+        this.load()
       })
     }
   }

@@ -81,7 +81,7 @@
               <div class="data-row highlight">
                 <span class="label">考勤应发金额:</span>
                 <span class="value" style="color: #67C23A; font-weight: bold">
-                  {{ formatMoney(kaoqin.kaoqinNum) }}
+                  {{ formatMoney(kaoqin.kaoqinKaoqinnum) }}
                 </span>
               </div>
             </div>

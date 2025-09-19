@@ -53,23 +53,24 @@
         <el-menu-item index="/master/finance">缴费记录</el-menu-item>
       </el-menu-item-group>
     </el-submenu>
-    <el-submenu index="9">
-      <template slot="title"><i class="el-icon-s-shop"></i>
-        <span slot="title">考勤记录</span>
-      </template>
-      <el-menu-item-group>
-        <el-menu-item index="/master/kaoqin">考勤记录</el-menu-item>
-      </el-menu-item-group>
-    </el-submenu>
     <el-submenu index="10">
       <template slot="title"><i class="el-icon-s-data"></i>
         <span slot="title">资金管理</span>
       </template>
       <el-menu-item-group>
-        <el-menu-item index="/master/shouzhi">收支情况</el-menu-item>
+        <el-menu-item index="/master/kaoqin">考勤记录</el-menu-item>
+      </el-menu-item-group>
+      <el-menu-item-group>
+        <el-menu-item index="/master/jixiaoremake">绩效详情</el-menu-item>
+      </el-menu-item-group>
+      <el-menu-item-group>
+        <el-menu-item index="/master/othercoll">其他工资</el-menu-item>
       </el-menu-item-group>
       <el-menu-item-group>
         <el-menu-item index="/master/salary">老师工资</el-menu-item>
+      </el-menu-item-group>
+      <el-menu-item-group>
+        <el-menu-item index="/master/shouzhi">收支情况</el-menu-item>
       </el-menu-item-group>
     </el-submenu>
     <el-submenu index="6">
